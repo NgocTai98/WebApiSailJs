@@ -1,0 +1,30 @@
+{
+    "dev": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "savvycom",
+        "driver": "mysql",
+        "multipleStatements": true
+    },
+    "test": {
+        "driver": "mysql",
+        "filename": ":memory:"
+    },
+    "prod": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "savvycom",
+        "driver": "mysql"
+    },
+    "mysql": {
+        "driver": "mysql",
+        "user": "root",
+        "password": "",
+        "host": "localhost",
+        "database": "savvycom",
+        "port": "3306"       
+      }
+    
+}
