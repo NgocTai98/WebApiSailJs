@@ -10,7 +10,7 @@ module.exports = {
 
       let order1 = [order, TotalRecords];
       let orders = await Promise.allSettled(order1);
-      if (orders == undefined) {
+      if (!orders) {
         throw 'FAIL_VIEW_ORDER';
       }
       return orders;
@@ -25,11 +25,12 @@ module.exports = {
     }).limit(limit).skip(offset);
     let order1 = [order, TotalRecords];
     let orders = await Promise.allSettled(order1);
-    if (order == undefined) {
+    if (!order) {
       throw 'FAIL_VIEW_ORDER';
     }
     return orders;
   },
+  
   create: async function (order) {
     if (!order.code || !order.address || !order.phone) {
       throw 'EMPTY_FIELD'

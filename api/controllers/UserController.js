@@ -24,23 +24,25 @@ module.exports = {
   },
 
   editProfile: async function (req, res) {
-    let id = req.param('id');
-    let email = req.param('email');
-    let password = req.param('password');
-    let age = req.param('age');
-    let sex = req.param('sex');
-    let level = req.param('level');
-    let address = req.param('address');
-    let phone = req.param('phone');
-    let fullname = req.param('fullname');
+   let profile = {
+   id: req.token.id,
+   email: req.param('email'),
+   password: req.param('password'),
+   age: req.param('age'),
+   sex: req.param('sex'),
+   level: req.param('level'),
+   address: req.param('address'),
+   phone: req.param('phone'),
+   fullname: req.param('fullname'),
+   }
     try {
-      let profile = await userService.update_profile(id,email,password,age,sex,level,address,phone,fullname);
+      let profiles = await userService.update_profile(profile);
      
       return res.status(200).json({
         message: 'Đã sửa thành công thông tin profile',
         data: {
-          user: profile[0],
-          info: profile[1]
+          user: profiles[0],
+          info: profiles[1]
         }
       })
     } catch (error) {

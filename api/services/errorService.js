@@ -1,3 +1,4 @@
+
 module.exports = {
   error: async function (err) {
     switch (err) {
@@ -94,7 +95,7 @@ module.exports = {
 
       case 'EMPTY_FIELD':
         return {
-          code: 400,
+          code: 406,
             message: 'Các trường không được để trống'
         };
       case 'EMPTY_PASSWORD':
@@ -114,12 +115,12 @@ module.exports = {
         };
       case 'INCORRECT_LOGIN':
         return {
-          code: 404,
+          code: 405,
             message: 'Email hoặc password không hợp lệ'
         };
       case 'FAIL_LIST_COUPON':
         return {
-          code: 500,
+          code: 509,
             message: 'Không thể hiển thị danh sách mã coupon'
         };
       case 'FAIL_CREATE_COUPON':
@@ -174,6 +175,13 @@ module.exports = {
             message: 'Token không hợp lệ'
         };
 
+        default: 
+        return {
+          code: 500,
+          message: 'Error server'
+        }
+     
     }
-  }
+  },
+
 }

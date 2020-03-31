@@ -3,7 +3,7 @@ module.exports = {
 
     let TotalRecords = await Product.count();
 
-    if (query == undefined) {
+    if (!query) {
       var products = await Product.find().populate('infoPro').populate('images').limit(limit).skip(offset);
     } else {
       var products = await Product.find({
@@ -12,7 +12,6 @@ module.exports = {
         }
       }).populate('infoPro').populate('images').limit(limit).skip(offset);
     }
-
     if (products == undefined) {
       throw 'FAIL_LIST_QUERY_PRODUCT';
     }
@@ -150,7 +149,7 @@ module.exports = {
   delete: async function (idProduct) {
     if (!idProduct) {
 
-      throw 'EMPTY_FIELD';
+      throw 'EMPTY_FIELD_ID';
     }
     let result = await sails.getDatastore().transaction(async (db) => {
 
@@ -164,7 +163,6 @@ module.exports = {
       throw 'FAIL_DELETE_PRODUCT';
     }
     return result;
-
 
   }
 }

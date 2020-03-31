@@ -16,20 +16,19 @@ module.exports = {
 
         return [find, token];
       }
-      return undefined;
-    }).catch(err => undefined);
-    if (user == undefined) {
+    }).catch(err => {
       throw 'INCORRECT_LOGIN'
-    }
+    });
+
     return user;
 
   },
 
-  list: async function (limit,offset,query) {
+  list: async function (limit, offset, query) {
 
     let TotalRecords = await Users.count();
-   
-    if (query == undefined) {
+
+    if (!query) {
       var user = await Users.find().populate('info').limit(limit).skip(offset);
     } else {
       var user = await Users.find({
@@ -38,7 +37,7 @@ module.exports = {
         }
       }).populate('info').limit(limit).skip(offset);
     }
-    if (user == undefined) {
+    if (!user) {
       throw 'FAIL_LIST_USERS';
     }
 
@@ -48,23 +47,23 @@ module.exports = {
   },
 
 
-  create: async function (email, password, age, sex, level, address, phone, fullname) {
-    if (!email || !password || !age || !sex || !level) {
+  create: async function (user) {
+    if (!user.email || !user.password || !user.age || !user.sex || !user.level) {
       throw 'EMPTY_FIELD';
     }
     var result = await sails.getDatastore().transaction(async (db) => {
       let newUser = await Users.create({
-        email: email,
-        password: password,
-        age: age,
-        sex: sex,
-        level: level
+        email: user.email,
+        password: user.password,
+        age: user.age,
+        sex: user.sex,
+        level: user.level
       }).fetch().usingConnection(db);
 
       let newInfo = await UserInfo.create({
-        address: address,
-        phone: phone,
-        fullname: fullname,
+        address: user.address,
+        phone: user.phone,
+        fullname: user.fullname,
         userId: newUser.id,
       }).fetch().usingConnection(db);
       var token = jwToken.issue({
@@ -72,14 +71,11 @@ module.exports = {
         role: newUser.level
       });
 
-      if (newUser == undefined || newInfo == undefined) {
+      if (!newUser || !newInfo) {
         throw 'FAIL_SIGNUP';
       }
       return [newUser, newInfo, token];
     })
-    if (result == undefined) {
-      throw 'FAIL_SIGNUP'
-  }
     return result;
   },
 
@@ -87,44 +83,42 @@ module.exports = {
 
     var profile = await Users.find({
       id: id
-    }).populate('info').then(result => result);
-    if (profile == undefined) {
+    }).populate('info');
+    if (!profile) {
       throw 'FAIL_VIEW_PROFILE';
     }
     return profile;
   },
 
-  update_profile: async function (id, email, password, age, sex, address, phone, fullname) {
+  update_profile: async function (profile) {
 
-    if (!id) {
+    if (!profile.id) {
       throw 'EMPTY_FIELD_ID'
     }
     var result = await sails.getDatastore().transaction(async (db) => {
       let newUser = await Users.update({
-        id: id
+        id: profile.id
       }, {
-        email: email,
-        password: password,
-        age: age,
-        sex: sex
+        email: profile.email,
+        password: profile.password,
+        age: profile.age,
+        sex: profile.sex
 
       }).fetch().usingConnection(db);
 
       let newInfo = await UserInfo.update({
         id: newUser.id
       }, {
-        address: address,
-        phone: phone,
-        fullname: fullname,
+        address: profile.address,
+        phone: profile.phone,
+        fullname: profile.fullname,
         userId: newUser.id
       }).fetch().usingConnection(db);
-
-      
+      if (!newUser || !newInfo) {
+        throw 'FAIL_EDIT_PROFILE';
+      }
       return [newUser, newInfo];
     })
-    if (result == undefined) {
-      throw 'FAIL_EDIT_PROFILE';
-    }
     return result;
   },
 
@@ -140,7 +134,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
-    if (result == undefined) {
+    if (!result) {
       throw 'FAIL_EDIT_USER'
     }
     return result;
@@ -156,7 +150,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
-    if (result == undefined) {
+    if (!result) {
       throw 'FAIL_DELETE_USER';
     }
     return result;

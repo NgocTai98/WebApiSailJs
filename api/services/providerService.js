@@ -3,7 +3,7 @@ module.exports = {
 
     let TotalRecords = await Provider.count();
    
-    if (query == undefined) {
+    if (!query) {
       var provider = await Provider.find().limit(limit).skip(offset);
     } else {
       var provider = await Provider.find({

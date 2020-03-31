@@ -5,7 +5,7 @@ module.exports = {
 
     let TotalRecords = await Coupon.count();
    
-    if (query == undefined) {
+    if (!query) {
       var coupon = await Coupon.find().limit(limit).skip(offset);
     } else {
       var coupon = await Coupon.find({

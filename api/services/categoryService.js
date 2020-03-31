@@ -3,7 +3,7 @@ module.exports = {
 
     let TotalRecords = await Category.count();
     
-    if (query == undefined) {
+    if (!query) {
       var cate = await Category.find().limit(limit).skip(offset);
     } else {
       var cate = await Category.find({
