@@ -33,7 +33,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return provider;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_CREATE_PROVIDER';
     }
     return result;
@@ -55,7 +55,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return provider;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_EDIT_PROVIDER'
     }
     return result;
