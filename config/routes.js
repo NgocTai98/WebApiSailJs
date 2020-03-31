@@ -117,7 +117,7 @@ module.exports.routes = {
     controller: 'ProviderController',
     action: 'editProvider'
   },
-  'DELETE /api/user/providers': {
+  'DELETE /api/user/provider': {
     controller: 'ProviderController',
     action: 'deleteProvider'
   },

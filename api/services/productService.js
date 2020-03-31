@@ -5,14 +5,13 @@ module.exports = {
 
     if (!query) {
       var products = await Product.find().populate('infoPro').populate('images').limit(limit).skip(offset);
-    } else {
-      var products = await Product.find({
-        productName: {
-          'startsWith': query,
-        }
-      }).populate('infoPro').populate('images').limit(limit).skip(offset);
     }
-    if (products == undefined) {
+    var products = await Product.find({
+      productName: {
+        'startsWith': query,
+      }
+    }).populate('infoPro').populate('images').limit(limit).skip(offset);
+    if (!products) {
       throw 'FAIL_LIST_QUERY_PRODUCT';
     }
     return [products, TotalRecords];

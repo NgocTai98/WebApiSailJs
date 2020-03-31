@@ -30,7 +30,7 @@ module.exports = {
     }
     return orders;
   },
-  
+
   create: async function (order) {
     if (!order.code || !order.address || !order.phone) {
       throw 'EMPTY_FIELD'
@@ -71,7 +71,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return order;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_CREATE_ORDER';
     }
     return result;
@@ -89,7 +89,7 @@ module.exports = {
       return order;
 
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_EDIT_ORDER';
     }
     return result;
@@ -105,7 +105,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return order;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_DELETE_ORDER';
     }
     return result;

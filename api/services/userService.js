@@ -1,4 +1,4 @@
-const paginate = require('express-paginate')
+
 module.exports = {
   login: async function (email, password) {
     if (!email || !password) {
@@ -71,7 +71,7 @@ module.exports = {
         role: newUser.level
       });
 
-      if (!newUser || !newInfo) {
+      if (newUser.length == 0 || newInfo.length == 0) {
         throw 'FAIL_SIGNUP';
       }
       return [newUser, newInfo, token];
@@ -114,7 +114,7 @@ module.exports = {
         fullname: profile.fullname,
         userId: newUser.id
       }).fetch().usingConnection(db);
-      if (!newUser || !newInfo) {
+      if (newUser.length == 0 || newInfo.length == 0) {
         throw 'FAIL_EDIT_PROFILE';
       }
       return [newUser, newInfo];
@@ -134,7 +134,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_EDIT_USER'
     }
     return result;
@@ -150,7 +150,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
-    if (!result) {
+    if (result.length == 0) {
       throw 'FAIL_DELETE_USER';
     }
     return result;

@@ -65,7 +65,7 @@ module.exports = {
       }).fetch().usingConnection(db);
       return coupon;
     });
-    if (result == undefined) {
+    if (result.length == 0) {
       throw 'FAIL_EDIT_COUPON'
     }
     return result;

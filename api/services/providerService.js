@@ -1,21 +1,20 @@
 module.exports = {
-  list: async function (limit,offset,query) {
+  list: async function (limit, offset, query) {
 
     let TotalRecords = await Provider.count();
-   
+
     if (!query) {
       var provider = await Provider.find().limit(limit).skip(offset);
-    } else {
-      var provider = await Provider.find({
-        name: {
-          'startsWith': query,
-        }
-      }).limit(limit).skip(offset);
     }
-   
-    if (provider == undefined) {
+    var provider = await Provider.find({
+      name: {
+        'startsWith': query,
+      }
+    }).limit(limit).skip(offset);
+
+    if (!provider) {
       throw 'FAIL_VIEW_PROVIDER'
-  }
+    }
     return [totalRecords, provider];
 
   },
@@ -34,9 +33,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return provider;
     });
-    if (result == undefined) {
+    if (!result) {
       throw 'FAIL_CREATE_PROVIDER';
-  }
+    }
     return result;
   },
   update: async function (provider) {
@@ -56,9 +55,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return provider;
     });
-    if (result == undefined) {
+    if (!result) {
       throw 'FAIL_EDIT_PROVIDER'
-  }
+    }
     return result;
   },
   delete: async function (id) {
@@ -70,10 +69,10 @@ module.exports = {
         id: id
       }).fetch().usingConnection(db);
       return provider;
-    });
-    if (result == undefined) {
+    });    
+    if (result.length == 0) {
       throw 'FAIL_DELETE_PROVIDER'
-  }
+    }
     return result;
   },
 }
