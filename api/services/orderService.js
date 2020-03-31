@@ -1,23 +1,18 @@
 module.exports = {
-  list: async function (limit, query) {
+  list: async function (limit,offset,query) {
 
-    let TotalItem = await Order.count();
-    if (limit == undefined) {
-      var totalPage = 1;
-    } else {
-      if (TotalItem % limit == 0) {
-        var totalPage = TotalItem / limit;
-      } else {
-        var totalPage = parseInt(TotalItem / limit) + 1;
-      }
-    }
+    let TotalRecords = await Order.count({where: {state: 0}});
+    
     if (!query) {
       let order = Order.find({
         state: 0
-      }).limit(limit).then(find => find);
+      }).limit(limit).skip(offset);
 
-      let order1 = [order, totalPage];
-      let orders = await Promise.allSettled(order1).then(result => result);
+      let order1 = [order, TotalRecords];
+      let orders = await Promise.allSettled(order1);
+      if (orders == undefined) {
+        throw 'FAIL_VIEW_ORDER';
+      }
       return orders;
 
     }
@@ -27,33 +22,36 @@ module.exports = {
       code: {
         'startsWith': query
       }
-    }).limit(limit).then(find => find);
-    let order1 = [order, totalPage];
-    let orders = await Promise.allSettled(order1).then(result => result);
+    }).limit(limit).skip(offset);
+    let order1 = [order, TotalRecords];
+    let orders = await Promise.allSettled(order1);
+    if (order == undefined) {
+      throw 'FAIL_VIEW_ORDER';
+    }
     return orders;
   },
-  create: async function (code, address, phone, couponCode, couponSale, userId, couponId, productsizecolor, price, total) {
-    if (!code || !address || !phone) {
+  create: async function (order) {
+    if (!order.code || !order.address || !order.phone) {
       throw 'EMPTY_FIELD'
     }
     var result = await sails.getDatastore().transaction(async (db) => {
       var newOrder = await Order.create({
-        code: code,
+        code: order.code,
         total: 0,
         state: 0,
-        address: address,
-        phone: phone,
-        couponCode: couponCode,
-        couponSale: couponSale,
-        userId: userId,
-        couponId: couponId
+        address: order.address,
+        phone: order.phone,
+        couponCode: order.couponCode,
+        couponSale: order.couponSale,
+        userId: order.userId,
+        couponId: order.couponId
       }).fetch().usingConnection(db);
-      if (!productsizecolor) {
+      if (!order.productsizecolor) {
         throw 'EMPTY_FIELD_ID'
       }
-      var pro = productsizecolor.split(",");
-      var price = price.split(",");
-      var total = total.split(",");
+      var pro = order.productsizecolor.split(",");
+      var price = order.price.split(",");
+      var total = order.total.split(",");
       var totalPrice = 0;
       for (let i = 0; i < pro.length; i++) {
         var newOrderItem = await OrderItem.create({
@@ -72,6 +70,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return order;
     });
+    if (!result) {
+      throw 'FAIL_CREATE_ORDER';
+    }
     return result;
   },
   update: async function (id, state) {
@@ -87,6 +88,9 @@ module.exports = {
       return order;
 
     });
+    if (!result) {
+      throw 'FAIL_EDIT_ORDER';
+    }
     return result;
 
   },
@@ -100,26 +104,24 @@ module.exports = {
       }).fetch().usingConnection(db);
       return order;
     });
+    if (!result) {
+      throw 'FAIL_DELETE_ORDER';
+    }
     return result;
   },
-  process: async function (limit, query) {
+  process: async function (limit,offset,query) {
 
-    let TotalItem = await Order.count();
-    if (limit == undefined) {
-      var totalPage = 1;
-    } else {
-      if (TotalItem % limit == 0) {
-        var totalPage = TotalItem / limit;
-      } else {
-        var totalPage = parseInt(TotalItem / limit) + 1;
-      }
-    }
+    let TotalRecords = await Order.count({where: {state: 1}});
+    
     if (!query) {
       let order = Order.find({
         state: 1
-      }).limit(limit).then(find => find);
-      let order1 = [order, totalPage];
-      let orders = await Promise.allSettled(order1).then(result => result);
+      }).limit(limit).skip(offset);
+      let order1 = [order, TotalRecords];
+      let orders = await Promise.allSettled(order1);
+      if (!orders) {
+        throw 'FAIL_VIEW_ORDER_PROCESS';
+      }
       return orders;
     } else {
       let order = Order.find({
@@ -128,9 +130,12 @@ module.exports = {
         code: {
           'startsWith': query
         }
-      }).limit(limit).then(find => find);
-      let order1 = [order, totalPage];
-      let orders = await Promise.allSettled(order1).then(result => result);
+      }).limit(limit).skip(offset);
+      let order1 = [order, TotalRecords];
+      let orders = await Promise.allSettled(order1);
+      if (!orders) {
+        throw 'FAIL_VIEW_ORDER_PROCESS';
+      }
       return orders;
     }
   }

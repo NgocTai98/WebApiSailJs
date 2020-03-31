@@ -10,9 +10,7 @@ module.exports = {
     let id = req.token.id;
     try {
       let profile = await userService.get_profile(id);
-      if (profile == undefined) {
-        throw 'FAIL_VIEW_PROFILE';
-      }
+     
       return res.status(200).json({
         message: 'Thông tin profile',
         data: profile
@@ -25,7 +23,7 @@ module.exports = {
     }
   },
 
-  edit_profile: async function (req, res) {
+  editProfile: async function (req, res) {
     let id = req.param('id');
     let email = req.param('email');
     let password = req.param('password');
@@ -37,9 +35,7 @@ module.exports = {
     let fullname = req.param('fullname');
     try {
       let profile = await userService.update_profile(id,email,password,age,sex,level,address,phone,fullname);
-      if (profile == undefined) {
-        throw 'FAIL_EDIT_PROFILE';
-      }
+     
       return res.status(200).json({
         message: 'Đã sửa thành công thông tin profile',
         data: {
@@ -57,12 +53,11 @@ module.exports = {
 
   list: async function (req, res) {
     var limit = req.param('limit');
+    var offset = req.param('offset');
     var query = req.param('query');
     try {
-      let users = await userService.list(limit, query);
-      if (users == undefined) {
-        throw 'FAIL_LIST_USERS';
-      }
+      let users = await userService.list(limit,offset,query);
+    
       return res.status(200).json({
         message: 'Danh sách các users',
         data: {
@@ -79,14 +74,12 @@ module.exports = {
     }
   },
 
-  edit_user: async function (req, res) {
+  editUser: async function (req, res) {
     let id = req.param('id');
     let level = req.param('level');
     try {
       let user = await userService.update_user(id,level);
-      if (user == undefined) {
-        throw 'FAIL_EDIT_USER'
-      }
+     
       return res.status(200).json({
         message: 'Sửa thông tin của user thành công',
         data: user
@@ -99,13 +92,11 @@ module.exports = {
     }
   },
 
-  delete_user: async function (req, res) {
+  deleteUser: async function (req, res) {
     let id = req.param('id');
     try {
       let user = await userService.del_user(id);
-      if (user == undefined) {
-        throw 'FAIL_DELETE_USER';
-      }
+      
       return res.status(200).json({
         message: 'Đã xóa thành công'
       })

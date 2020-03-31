@@ -26,7 +26,7 @@ module.exports.routes = {
   },  
   'POST /api/sign-up': {
     controller: 'LoginController',
-    action: 'sign_up'
+    action: 'signUp'
   },
 
   'GET /api/user/profile': {
@@ -35,7 +35,7 @@ module.exports.routes = {
   },
   "PUT /api/user/profile": {
     controller: 'UserController',
-    action: 'edit_profile'
+    action: 'editProfile'
   },
 
   'GET /api/users': {
@@ -44,104 +44,104 @@ module.exports.routes = {
   },
   'PUT /api/user': {
     controller: 'UserController',
-    action: 'edit_user'
+    action: 'editUser'
   },
   'DELETE /api/user': {
     controller: 'UserController',
-    action: 'delete_user'
+    action: 'deleteUser'
   },
 
 
   'GET /api/user/productions': {
     controller: 'ProductController',
-    action: 'list_product'
+    action: 'listProduct'
   },
   'POST /api/user/product': {
     controller: 'ProductController',
-    action: 'create_product'
+    action: 'createProduct'
   },
   'PUT /api/user/product': {
     controller: 'ProductController',
-    action: 'edit_product'
+    action: 'editProduct'
   },
   'DELETE /api/user/product': {
     controller: 'ProductController',
-    action: 'delete_product'
+    action: 'deleteProduct'
   },
 
 
 
   'GET /api/user/categories': {
     controller: 'CategoryController',
-    action: 'list_category'
+    action: 'listCategory'
   },
   'POST /api/user/category': {
     controller: 'CategoryController',
-    action: 'create_category'
+    action: 'createCategory'
   },
   'PUT /api/user/category': {
     controller: 'CategoryController',
-    action: 'edit_category'
+    action: 'editCategory'
   },
   'DELETE /api/user/category': {
     controller: 'CategoryController',
-    action: 'delete_category'
+    action: 'deleteCategory'
   },
 
   'GET /api/user/coupons': {
     controller: 'CouponController',
-    action: 'list_coupon'
+    action: 'listCoupon'
   },
   'POST /api/user/coupon': {
     controller: 'CouponController',
-    action: 'create_coupon'
+    action: 'createCoupon'
   },
   'PUT /api/user/coupon': {
     controller: 'CouponController',
-    action: 'edit_coupon'
+    action: 'editCoupon'
   },
   'DELETE /api/user/coupon': {
     controller: 'CouponController',
-    action: 'delete_coupon'
+    action: 'deleteCoupon'
   },
 
   'GET /api/user/providers': {
     controller: 'ProviderController',
-    action: 'list_provider'
+    action: 'listProvider'
   },
   'POST /api/user/provider': {
     controller: 'ProviderController',
-    action: 'create_provider'
+    action: 'createProvider'
   },
   'PUT /api/user/provider': {
     controller: 'ProviderController',
-    action: 'edit_provider'
+    action: 'editProvider'
   },
   'DELETE /api/user/providers': {
     controller: 'ProviderController',
-    action: 'delete_provider'
+    action: 'deleteProvider'
   },
 
   'GET /api/user/orders': {
     controller: 'OrderController',
-    action: 'list_order'
+    action: 'listOrder'
   },
   
   'GET /api/admin/order/process': {
     controller: 'OrderController',
-    action: 'process_order'
+    action: 'processOrder'
   },
   'POST /api/user/order': {
     controller: 'OrderController',
-    action: 'create_order'
+    action: 'createOrder'
   },
   'PUT /api/admin/order': {
     controller: 'OrderController',
-    action: 'edit_order'
+    action: 'editOrder'
   },
   'DELETE /api/user/order': {
     controller: 'OrderController',
-    action: 'delete_order'
+    action: 'deleteOrder'
   },
 
   /***************************************************************************

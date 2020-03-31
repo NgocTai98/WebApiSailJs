@@ -6,14 +6,12 @@
  */
 
 module.exports = {
-  list_coupon: async function (req, res) {
+  listCoupon: async function (req, res) {
     var limit = req.param('limit');
+    var offset = req.param('offset');
     var query = req.param('query');
     try {
-      let coupon = await couponService.list(limit, query);
-      if (coupon == undefined) {
-        throw 'FAIL_LIST_COUPON'
-      }
+      let coupon = await couponService.list(limit,offset,query);      
       return res.status(200).json({
         message: 'Danh sách mã coupon',
         data: {
@@ -28,21 +26,21 @@ module.exports = {
       })
     }
   },
-  create_coupon: async function (req, res) {
-    var couponCode = req.param('couponCode');
-    var sale = req.param('sale');
-    var type = req.param('type');
-    var totalCoupon = req.param('totalCoupon');
-    var time = req.param('time');
-    var userId = req.token.id;
+  createCoupon: async function (req, res) {
+   let coupon = {
+     couponCode: req.param('couponCode'),
+     sale: req.param('sale'),
+     type: req.param('type'),
+     totalCoupon: req.param('totalCoupon'),
+     time: req.param('time'),
+     userId: req.token.id,
+   }
     try {
-      let coupon = await couponService.create(couponCode, sale, type, totalCoupon, time, userId);
-      if (coupon == undefined) {
-        throw 'FAIL_CREATE_COUPON'
-      }
+      let coupons = await couponService.create(coupon);
+      
       return res.status(200).json({
         message: 'Thêm mới thành công mã coupon',
-        data: coupon
+        data: coupons
       })
     } catch (error) {
       let err = await errorService.error(error);
@@ -51,22 +49,22 @@ module.exports = {
       })
     }
   },
-  edit_coupon: async function (req, res) {
-    var id = req.param('id');
-    var couponCode = req.param('couponCode');
-    var sale = req.param('sale');
-    var type = req.param('type');
-    var totalCoupon = req.param('totalCoupon');
-    var time = req.param('time');
-    var userId = req.token.id;
+  editCoupon: async function (req, res) {
+   let coupon = {
+   id: req.param('id'),
+   couponCode: req.param('couponCode'),
+   sale: req.param('sale'),
+   type: req.param('type'),
+   totalCoupon: req.param('totalCoupon'),
+   time: req.param('time'),
+   userId: req.token.id,
+   }
     try {
-      let coupon = await couponService.update(id, couponCode, sale, type, totalCoupon, time, userId);
-      if (coupon == undefined) {
-        throw 'FAIL_EDIT_COUPON'
-      }
+      let coupons = await couponService.update(coupon);
+     
       return res.status(200).json({
         message: 'Sửa thành công mã coupon',
-        data: coupon
+        data: coupons
       })
     } catch (error) {
       let err = await errorService.error(error);
@@ -75,13 +73,11 @@ module.exports = {
       })
     }
   },
-  delete_coupon: async function (req, res) {
+  deleteCoupon: async function (req, res) {
     var id = req.param('id');
     try {
       let coupon = await couponService.delete(id);
-      if (coupon == undefined) {
-        throw 'FAIL_DELETE_COUPON'
-      }
+     
       return res.status(200).json({
         message: 'Đã xóa mã coupon',
       })

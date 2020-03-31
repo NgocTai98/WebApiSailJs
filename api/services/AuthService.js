@@ -11,14 +11,18 @@ module.exports = async function(req, res){
         token = credentials;
       }
     } else {
-      return res.json(401, {
-        err: 'Định dạng phải ở dạng : Bearer [token]'
-      });
+      throw 'FAIL_TOKEN_DEFINED';
     }
   } else {
-    return res.json(401, {
-      err: 'Không tìm thấy Authorization'
-    });
+    throw 'NOT_FOUND_TOKEN'
   }
-  return token;
+  let decode = jwToken.verify(token, function (err, token) {
+    if (err) {
+      throw 'INCORRECT_TOKEN';
+    }    
+    return token;   
+    
+  });
+  return decode;
+  
 }

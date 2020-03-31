@@ -7,7 +7,7 @@
 var jwt = require('jsonwebtoken');
 
 module.exports = {
-  sign_up: async function (req, res) {
+  signUp: async function (req, res) {
     let email = req.param('email');
     let password = req.param('password');
     let age = req.param('age');
@@ -18,9 +18,7 @@ module.exports = {
     let fullname = req.param('fullname');
     try {
       let user = await userService.create(email,password,age,sex,level,address,phone,fullname);
-        if (user == undefined) {
-            throw 'FAIL_SIGNUP'
-        }
+       
         return res.json({
           status: 'success',
           message: 'Đăng ký thành công',
@@ -43,9 +41,7 @@ module.exports = {
     let password = req.param('password');
     try {
       let user = await userService.login(email,password);
-      if (user == undefined) {
-        throw 'INCORRECT_LOGIN'
-      }
+     
       return res.status(200).json({
         message: 'Đăng nhập thành công',
         data: {

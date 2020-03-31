@@ -18,39 +18,31 @@ module.exports = {
       }
       return undefined;
     }).catch(err => undefined);
-
+    if (user == undefined) {
+      throw 'INCORRECT_LOGIN'
+    }
     return user;
 
   },
 
-  list: async function (limit, query) {
+  list: async function (limit,offset,query) {
 
-
-    let TotalItem = await Users.count();
-    if (limit == undefined) {
-      var totalPage = 1;
-    } else {
-      if (TotalItem % limit == 0) {
-        var totalPage = TotalItem / limit;
-      } else {
-        var totalPage = parseInt(TotalItem / limit) + 1;
-      }
-    }
-
+    let TotalRecords = await Users.count();
+   
     if (query == undefined) {
-      var user = await Users.find().populate('info').limit(limit).then(finds => finds).catch(err => undefined);
+      var user = await Users.find().populate('info').limit(limit).skip(offset);
     } else {
       var user = await Users.find({
         email: {
           'startsWith': query,
         }
-      }).populate('info').limit(limit).then(finds => finds).catch(err => err);
+      }).populate('info').limit(limit).skip(offset);
     }
     if (user == undefined) {
-      return undefined;
+      throw 'FAIL_LIST_USERS';
     }
 
-    return [user, totalPage];
+    return [user, totalRecords];
 
 
   },
@@ -85,6 +77,9 @@ module.exports = {
       }
       return [newUser, newInfo, token];
     })
+    if (result == undefined) {
+      throw 'FAIL_SIGNUP'
+  }
     return result;
   },
 
@@ -93,7 +88,9 @@ module.exports = {
     var profile = await Users.find({
       id: id
     }).populate('info').then(result => result);
-
+    if (profile == undefined) {
+      throw 'FAIL_VIEW_PROFILE';
+    }
     return profile;
   },
 
@@ -122,9 +119,12 @@ module.exports = {
         userId: newUser.id
       }).fetch().usingConnection(db);
 
-
+      
       return [newUser, newInfo];
     })
+    if (result == undefined) {
+      throw 'FAIL_EDIT_PROFILE';
+    }
     return result;
   },
 
@@ -140,6 +140,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
+    if (result == undefined) {
+      throw 'FAIL_EDIT_USER'
+    }
     return result;
   },
 
@@ -153,6 +156,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return user;
     });
+    if (result == undefined) {
+      throw 'FAIL_DELETE_USER';
+    }
     return result;
 
   }

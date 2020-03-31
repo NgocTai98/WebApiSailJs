@@ -1,65 +1,64 @@
 module.exports = {
-  list: async function (limit, query) {
+  list: async function (limit,offset,query) {
 
-    let TotalItem = await Provider.count();
-    if (limit == undefined) {
-      var totalPage = 1;
-    } else {
-      if (TotalItem % limit == 0) {
-        var totalPage = TotalItem / limit;
-      } else {
-        var totalPage = parseInt(TotalItem / limit) + 1;
-      }
-    }
+    let TotalRecords = await Provider.count();
+   
     if (query == undefined) {
-      var provider = await Provider.find().limit(limit).then(finds => finds).catch(err => undefined);
+      var provider = await Provider.find().limit(limit).skip(offset);
     } else {
       var provider = await Provider.find({
         name: {
           'startsWith': query,
         }
-      }).limit(limit).then(finds => finds).catch(err => undefined);
+      }).limit(limit).skip(offset);
     }
+   
     if (provider == undefined) {
-      return undefined;
-    }
-    return [totalPage, provider];
+      throw 'FAIL_VIEW_PROVIDER'
+  }
+    return [totalRecords, provider];
 
   },
-  create: async function (name, code, address, phone, info, userId) {
-    if (!name || !address || !code || !phone || !info) {
+  create: async function (provider) {
+    if (!provider.name || !provider.address || !provider.code || !provider.phone || !provider.info) {
       throw 'EMPTY_FIELD';
     }
     var result = await sails.getDatastore().transaction(async (db) => {
       var provider = Provider.create({
-        name: name,
-        address: address,
-        code: code,
-        phone: phone,
-        info: info,
-        userId: userId
+        name: provider.name,
+        address: provider.address,
+        code: provider.code,
+        phone: provider.phone,
+        info: provider.info,
+        userId: provider.userId
       }).fetch().usingConnection(db);
       return provider;
     });
+    if (result == undefined) {
+      throw 'FAIL_CREATE_PROVIDER';
+  }
     return result;
   },
-  update: async function (id, name, code, address, phone, info, userId) {
-    if (!id) {
+  update: async function (provider) {
+    if (!provider.id) {
       throw 'EMPTY_FIELD_ID';
     }
     var result = await sails.getDatastore().transaction(async (db) => {
       let provider = await Provider.update({
-        id: id
+        id: provider.id
       }, {
-        name: name,
-        address: address,
-        code: code,
-        phone: phone,
-        info: info,
-        userId: userId
+        name: provider.name,
+        address: provider.address,
+        code: provider.code,
+        phone: provider.phone,
+        info: provider.info,
+        userId: provider.userId
       }).fetch().usingConnection(db);
       return provider;
     });
+    if (result == undefined) {
+      throw 'FAIL_EDIT_PROVIDER'
+  }
     return result;
   },
   delete: async function (id) {
@@ -72,6 +71,9 @@ module.exports = {
       }).fetch().usingConnection(db);
       return provider;
     });
+    if (result == undefined) {
+      throw 'FAIL_DELETE_PROVIDER'
+  }
     return result;
   },
 }

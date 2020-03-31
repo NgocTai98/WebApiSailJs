@@ -20,14 +20,14 @@ module.exports.policies = {
   '*': 'is-logged-in',
   loginController: {
     'login': true,
-    'sign_up': true
+    'signUp': true
   },
   UserController: {
     'list': 'is-admin'
   },
   OrderController: {
-    'process_order': 'is-admin',
-    'delete_order': 'is-admin'
+    'processOrder': 'is-admin',
+    'deleteOrder': 'is-admin'
   }
   
   

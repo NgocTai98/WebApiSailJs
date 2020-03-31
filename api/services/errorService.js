@@ -158,6 +158,21 @@ module.exports = {
             message: 'Không thể xóa danh mục sản phẩm này'
         };
 
+        case 'FAIL_TOKEN_DEFINED':
+        return {
+          code: 604,
+            message: 'Định dạng token không đúng'
+        };
+        case 'NOT_FOND_TOKEN':
+        return {
+          code: 605,
+            message: 'Không tìm thấy Authorization'
+        };
+        case 'INCORRECT_TOKEN':
+        return {
+          code: 606,
+            message: 'Token không hợp lệ'
+        };
 
     }
   }

@@ -6,20 +6,19 @@
  */
 
 module.exports = {
-    list_provider: async function (req, res) {
+    listProvider: async function (req, res) {
         var limit = req.param('limit');
+        var offset = req.param('offset');
         var query = req.param('query');
     
       try {
-          let provider = await providerService.list(limit,query);
-          if (provider == undefined) {
-              throw 'FAIL_VIEW_PROVIDER'
-          }
+          let providers = await providerService.list(limit,offset,query);
+        
           return res.status(200).json({
               message: 'Danh sách nhà cung cấp',
               data: {
-                  totalCount: provider[0],
-                  provider: provider[1]
+                  totalCount: providers[0],
+                  provider: providers[1]
               }
           })
       } catch (error) {
@@ -29,21 +28,21 @@ module.exports = {
         })
       }
     },
-    create_provider: async function (req, res) {
-        let name = req.param('name');
-        let code = req.param('code');
-        let address = req.param('address');
-        let phone = req.param('phone');
-        let info = req.param('info');
-        let userId = req.token.id;
+    createProvider: async function (req, res) {
+      let provider = {
+       name: req.param('name'),
+       code: req.param('code'),
+       address: req.param('address'),
+       phone: req.param('phone'),
+       info: req.param('info'),
+       userId: req.token.id,
+      }
       try {
-          let provider = await providerService.create(name,code,address,phone,info,userId);
-          if (provider == undefined) {
-              throw 'FAIL_CREATE_PROVIDER';
-          }
+          let providers = await providerService.create(provider);
+         
           return res.status(200).json({
               message: 'Thêm mới thành công nhà cung cấp',
-              data: provider
+              data: providers
           })
       } catch (error) {
         let err = await errorService.error(error);
@@ -52,22 +51,22 @@ module.exports = {
         })
       }
     },
-    edit_provider: async function (req, res) {
-        let id = req.param('id');
-        let name = req.param('name');
-        let code = req.param('code');
-        let address = req.param('address');
-        let phone = req.param('phone');
-        let info = req.param('info');
-        let userId = req.token.id;
+    editProvider: async function (req, res) {
+       let provider = {
+         id: req.param('id'),
+         name: req.param('name'),
+         code: req.param('code'),
+         address: req.param('address'),
+         phone: req.param('phone'),
+         info: req.param('info'),
+         userId: req.token.id,
+       }
       try {
-          let provider = await providerService.update(id,name,code,address,phone,info,userId);
-          if (provider == undefined) {
-              throw 'FAIL_EDIT_PROVIDER'
-          }
+          let providers = await providerService.update(provider);
+         
           return res.status(200).json({
               message: 'Sửa thành công nhà cung cấp',
-              data: provider
+              data: providers
           })
       } catch (error) {
         let err = await errorService.error(error);
@@ -76,13 +75,11 @@ module.exports = {
         })
       }
     },
-    delete_provider: async function (req, res) {
+    deleteProvider: async function (req, res) {
         let id = req.param('id');
       try {
-          let provider = await providerService.delete(id);
-          if (provider == undefined) {
-              throw 'FAIL_DELETE_PROVIDER'
-          }
+          let providers = await providerService.delete(id);
+        
           return res.status(200).json({
               message: 'Đã xóa nhà cung cấp',           
           })

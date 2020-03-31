@@ -6,14 +6,13 @@
  */
 
 module.exports = {
-  list_order: async function (req, res) {
+  listOrder: async function (req, res) {
     var limit = req.param('limit');
+    var offset = req.param('offset');
     var query = req.param('query');
     try {
-      let order = await orderService.list(limit, query);
-      if (order == undefined) {
-        throw 'FAIL_VIEW_ORDER';
-      }
+      let order = await orderService.list(limit,offset,query);
+     
       return res.status(200).json({
         message: 'Danh sách đơn hàng',
         data: {
@@ -28,25 +27,25 @@ module.exports = {
       })
     }
   },
-  create_order: async function (req, res) {
-    let code = req.param('code');
-    let address = req.param('address');
-    let phone = req.param('phone');
-    let couponCode = req.param('couponCode');
-    let couponSale = req.param('couponSale');
-    let userId = req.token.id;
-    let couponId = req.param('couponId');
-    let productsizecolor = req.param('productsizecolor');
-    let price = req.param('price');
-    let total = req.param('total');
+  createOrder: async function (req, res) {
+   let order = {
+     code: req.param('code'),
+     address: req.param('address'),
+     phone: req.param('phone'),
+     couponCode: req.param('couponCode'),
+     couponSale:req.param('couponSale'),
+     userId: req.token.id,
+     couponId: req.param('couponId'),
+     productsizecolor: req.param('productsizecolor'),
+     price: req.param('price'),
+     total: req.param('total'),
+   }
     try {
-      let order = await orderService.create(code, address, phone, couponCode, couponSale, userId, couponId, productsizecolor, price, total);
-      if (order == undefined) {
-        throw 'FAIL_CREATE_ORDER';
-      }
+      let orders = await orderService.create(order);
+     
       return res.status(200).json({
         message: 'Đã thêm thành công đơn hàng',
-        data: order
+        data: orders
       })
     } catch (error) {
       let err = await errorService.error(error);
@@ -55,14 +54,12 @@ module.exports = {
       })
     }
   },
-  edit_order: async function (req, res) {
+  editOrder: async function (req, res) {
     let id = req.param('id');
     let state = req.param('state');
     try {
       let order = await orderService.update(id, state);
-      if (order == undefined) {
-        throw 'FAIL_EDIT_ORDER';
-      }
+     
       return res.status(200).json({
         message: 'Đã sửa thành công đơn hàng',
         data: order
@@ -74,13 +71,11 @@ module.exports = {
       })
     }
   },
-  delete_order: async function (req, res) {
+  deleteOrder: async function (req, res) {
     let id = req.param('id');
     try {
       let order = await orderService.delete(id);
-      if (order == undefined) {
-        throw 'FAIL_DELETE_ORDER';
-      }
+     
       return res.status(200).json({
         message: 'Đã xóa đơn hàng',
       })
@@ -91,15 +86,14 @@ module.exports = {
       })
     }
   },
-  process_order: async function (req, res) {
+  processOrder: async function (req, res) {
     var limit = req.param('limit');
+    var offset = req.param('offset');
     var query = req.param('query');
 
     try {
-      let order = await orderService.process(limit, query);
-      if (order == undefined) {
-        throw 'FAIL_VIEW_ORDER_PROCESS';
-      }
+      let order = await orderService.process(limit,offset,query);
+    
       return res.status(200).json({
         message: 'Danh sách đơn hàng đã xử lý',
         data: {
